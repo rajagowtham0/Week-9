@@ -6,7 +6,7 @@ import logging
 import psutil
 import os
 
-from utils.models import CaseRequest, CaseResponse
+from models.models import CaseRequest, CaseResponse
 from utils.embedding import combine_text
 from utils.config import EMBEDDING_MODEL_NAME
 

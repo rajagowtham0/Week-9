@@ -1,12 +1,15 @@
 # retrieval_engine.py
-
+# IMPORTS
 import numpy as np
 import re
 import logging
 from pymongo import MongoClient
 from collections import Counter
+# FAISS vector index module
 from retrieval.vector_index import VectorIndex
+# Embedding generation
 from utils.embedding import generate_embedding
+# Configuration parameters
 from utils.config import (
     MONGO_URI,
     DATABASE_NAME,
@@ -14,26 +17,30 @@ from utils.config import (
     TOP_N
 )
 
-vector_index = None
-case_ids = []
-stored_cases = []
-engine_initialized = False
+# GLOBAL VARIABLES
+vector_index = None        # FAISS index instance
+case_ids = []              # List of case IDs
+stored_cases = []          # Full case data from MongoDB
+engine_initialized = False # Flag to avoid re-loading
 
-
-def initialize_engine():
+# INITIALIZATION FUNCTION
+def initialize_engine(): # load the data from the MongoDB and build FAISS index
 
     global vector_index, case_ids, stored_cases, engine_initialized
 
+    # Prevent re-initialization
     if engine_initialized:
         logging.info("Retrieval engine already initialized.")
         return
 
     logging.info("Initializing retrieval engine...")
 
+    # Connect to MongoDB to fetch the stored cases
     client = MongoClient(MONGO_URI)
     db = client[DATABASE_NAME]
     collection = db[COLLECTION_NAME]
 
+    # Fetch all documents
     docs = list(collection.find())
 
     if not docs:
@@ -43,12 +50,14 @@ def initialize_engine():
     case_ids = []
     stored_cases = []
 
+    # Extract embeddings and metadata
     for doc in docs:
         if "embedding" in doc and "case_id" in doc:
             embeddings.append(doc["embedding"])
             case_ids.append(doc["case_id"])
             stored_cases.append(doc)
 
+    # Build FAISS index 
     vector_index = VectorIndex()
     vector_index.build_index(embeddings, case_ids)
 
@@ -57,23 +66,24 @@ def initialize_engine():
 
     engine_initialized = True
 
-
-def preprocess_text(text):
-
+# TEXT PREPROCESSING
+def preprocess_text(text): # normalize the input text by converting to lower case and removing extra spaces
     text = text.lower()
     text = re.sub(r"\s+", " ", text)
     return text.strip()
 
-
-def retrieve_similar_cases(text, top_k=TOP_N):
+# RETRIEVAL FUNCTION
+def retrieve_similar_cases(text, top_k=TOP_N): # perform Faiss based similarity search
 
     global vector_index
 
     if not engine_initialized:
         raise RuntimeError("Call initialize_engine() first.")
 
+    # Preprocess input
     text = preprocess_text(text)
 
+    # Split input into symptoms and doctor notes
     if "." in text:
         parts = text.split(".", 1)
         symptoms = parts[0].strip()
@@ -82,16 +92,17 @@ def retrieve_similar_cases(text, top_k=TOP_N):
         symptoms = text
         doctor_notes = ""
 
+    # Generate embedding
     embedding = generate_embedding(symptoms, doctor_notes)
 
+    # Perform FAISS search
     results = vector_index.search(embedding, top_k)
 
     logging.info("FAISS top-K search executed")
 
     return results
-
-
-def extract_shared_symptoms(query_text, case_text):
+# SHARED SYMPTOMS EXTRACTION
+def extract_shared_symptoms(query_text, case_text): # extract common shared symptoms between query and stored case
 
     stopwords = {"and", "with", "the", "on", "in", "of", "to"}
 
@@ -102,11 +113,12 @@ def extract_shared_symptoms(query_text, case_text):
 
     return list(overlap)[:3]
 
-
-def generate_case_insight(similar_cases, query_text):
-
+# INSIGHT GENERATION
+def generate_case_insight(similar_cases, query_text): # generate structured insights from retrieved top similar cases
+   
     global stored_cases
 
+    # Handle empty results
     if not similar_cases:
         return {
             "similar_cases": [],
@@ -115,6 +127,7 @@ def generate_case_insight(similar_cases, query_text):
             "similarity_score": "0.0"
         }
 
+    # Filter low-confidence cases
     filtered_cases = [
         case for case in similar_cases
         if case["similarity_score"] >= 0.5
@@ -128,15 +141,18 @@ def generate_case_insight(similar_cases, query_text):
             "similarity_score": "0.0"
         }
 
+    # Sort and select top 5
     filtered_cases.sort(key=lambda x: x["similarity_score"], reverse=True)
-    filtered_cases = filtered_cases[:4]
+    filtered_cases = filtered_cases[:5]
 
+    # Map case_id to full case data
     case_map = {case["case_id"]: case for case in stored_cases}
 
     similarity_scores = []
     treatments = []
     structured_cases = []
 
+    # Process each case
     for case in filtered_cases:
 
         case_id = case["case_id"]
@@ -144,25 +160,30 @@ def generate_case_insight(similar_cases, query_text):
 
         similarity_scores.append(score)
 
+        # Store only case_id
         structured_cases.append({
             "case_id": case_id
         })
 
         matched_case = case_map.get(case_id)
 
+        # Collect treatments
         if matched_case and "treatment" in matched_case:
             treatments.append(matched_case["treatment"])
 
+    # Most common treatment
     if treatments:
         treatment_raw = Counter(treatments).most_common(1)[0][0]
     else:
         treatment_raw = "No treatment pattern identified."
 
+    # Average similarity score
     mean_similarity = round(
         sum(similarity_scores) / len(similarity_scores),
-        4
+        3
     )
 
+    # Extract shared symptoms
     symptoms_output = []
 
     for case in filtered_cases:
@@ -178,12 +199,13 @@ def generate_case_insight(similar_cases, query_text):
                 symptoms_output = overlap
                 break
 
+    # Fallback if no overlap
     if not symptoms_output and filtered_cases:
         top_case = case_map.get(filtered_cases[0]["case_id"])
         if top_case and "symptoms" in top_case:
             symptoms_output = top_case["symptoms"].split()[:3]
 
-    # FINAL FORMATTED OUTPUT
+    # FINAL STRUCTURED OUTPUT DOCTOR FRIENDLY
     return {
         "similar_cases": structured_cases,
         "symptoms": f"The similarity is mainly due to shared symptoms such as {', '.join(symptoms_output)}",
@@ -191,11 +213,9 @@ def generate_case_insight(similar_cases, query_text):
         "similarity_score": f"Based on the {len(filtered_cases)} similar patients, the weighted confidence score obtained is {mean_similarity}"
     }
 
-
+# FINAL PIPELINE FUNCTION FULLY REUSABLE
 def analyze_case(text):
-
     similar_cases = retrieve_similar_cases(text)
-
     insight = generate_case_insight(similar_cases, text)
 
     return insight

@@ -1,4 +1,4 @@
-# retrieval_engine.py
+# retrieval_engine.py (cleaned the unnecessary things and ensured functions are modular and reusable)
 # IMPORTS
 import numpy as np
 import re
@@ -213,7 +213,7 @@ def generate_case_insight(similar_cases, query_text): # generate structured insi
         "similarity_score": f"Based on the {len(filtered_cases)} similar patients, the weighted confidence score obtained is {mean_similarity}"
     }
 
-# FINAL PIPELINE FUNCTION FULLY REUSABLE
+# FINAL PIPELINE FUNCTION 
 def analyze_case(text):
     similar_cases = retrieve_similar_cases(text)
     insight = generate_case_insight(similar_cases, text)

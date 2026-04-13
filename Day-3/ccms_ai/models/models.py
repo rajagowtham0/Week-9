@@ -16,7 +16,7 @@ class SimilarCase(BaseModel):
 
 # Response schema
 class CaseResponse(BaseModel):
-    similar_cases: list
+    similar_cases: dict
     symptoms: str
     treatment: str
     similarity_score: str

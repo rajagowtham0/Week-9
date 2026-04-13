@@ -50,23 +50,15 @@ To retrieve the most relevant past cases for a given input.
 The system returns the top 5 similar cases along with their similarity scores in a consistent format.
 
 ### Pipeline
-Input (Symptoms + Doctor Notes)
-↓
-Text Preprocessing
-↓
-Embedding Generation
-↓
-FAISS Vector Search (Top 5)
-↓
-Similarity Score Calculation
-↓
-Filtering (Threshold ≥ 0.5)
-↓
-Sorting (Descending Similarity)
-↓
-Insight Generation
-↓
-Structured Output
+1. Input (Symptoms + Doctor Notes)
+2. Text Preprocessing
+3. Embedding Generation
+4. FAISS Vector Search (Top 5)
+5. Similarity Score Calculation
+6. Filtering (Threshold ≥ 0.5)
+7. Sorting (Descending Similarity)
+8. Insight Generation
+9. Structured Output
 
 ### Process
 1. The input (symptoms + doctor notes) is first cleaned and normalized
@@ -80,10 +72,10 @@ Structured Output
 ### Output structure
 {
   "similar_cases": [
-    {"case_id": "...", "similarity_score":...},
+    {"case_id": "...", "similarity_score": ...},
     {"case_id": "...", "similarity_score": ...}
   ],
-  "symptoms": "...",
-  "treatment": "...",
-  "similarity_score": "..."
+  "symptoms": "The similarity is mainly due to shared symptoms such as ...",
+  "treatment": "In similar past cases, patients well responded ...",
+  "similarity_score": "Based on the 5 similar patients, the weighted confidence score obtained is ..."
 }

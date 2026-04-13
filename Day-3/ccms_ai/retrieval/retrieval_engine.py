@@ -153,16 +153,24 @@ def generate_case_insight(similar_cases, query_text): # generate structured insi
     structured_cases = []
 
     # Process each case
+    seen = set()
+
     for case in filtered_cases:
 
         case_id = case["case_id"]
+
+        if case_id in seen:
+            continue
+        seen.add(case_id)
+
         score = float(case["similarity_score"])
 
         similarity_scores.append(score)
 
-        # Store only case_id
+        # Store case_id with similarity_score
         structured_cases.append({
-            "case_id": case_id
+            "case_id": case_id,
+            "similarity_score": round(score, 4)
         })
 
         matched_case = case_map.get(case_id)
@@ -210,7 +218,7 @@ def generate_case_insight(similar_cases, query_text): # generate structured insi
         "similar_cases": structured_cases,
         "symptoms": f"The similarity is mainly due to shared symptoms such as {', '.join(symptoms_output)}",
         "treatment": f"In similar past cases, patients well responded {treatment_raw}",
-        "similarity_score": f"Based on the {len(filtered_cases)} similar patients, the weighted confidence score obtained is {mean_similarity}"
+        "similarity_score": f"Based on the {len(structured_cases)} similar patients, the weighted confidence score obtained is {mean_similarity}"
     }
 
 # FINAL PIPELINE FUNCTION 

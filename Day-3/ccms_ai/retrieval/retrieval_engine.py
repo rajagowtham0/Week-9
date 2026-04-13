@@ -143,7 +143,7 @@ def generate_case_insight(similar_cases, query_text): # generate structured insi
 
     # Sort and select top 5
     filtered_cases.sort(key=lambda x: x["similarity_score"], reverse=True)
-    filtered_cases = filtered_cases[:5]
+    filtered_cases = filtered_cases[:TOP_N]
 
     # Map case_id to full case data
     case_map = {case["case_id"]: case for case in stored_cases}

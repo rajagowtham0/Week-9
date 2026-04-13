@@ -1,5 +1,21 @@
 # Week-9
 
+
+# Day-1
+## Retrieval Engine
+The retrieval module is designed as a modular pipeline for efficient similarity search and insight generation.
+### Structure
+1. initialize_engine() → Loads data and builds FAISS index
+2. preprocess_text() → Cleans input text
+3. retrieve_similar_cases() → Performs similarity search
+4. generate_case_insight() → Generates structured insights
+5. analyze_case() → End-to-end pipeline
+### Key factors
+1. Modular and reusable function design
+2. Clear separation of retrieval and insight logic
+3. FAISS-based fast similarity search
+4. Clean and maintainable code structure
+
 # Day-2 
 ## Embedding Generation
 Embeddings are generated using a Sentence Transformer model.

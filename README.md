@@ -32,7 +32,7 @@ Embeddings are generated using a Sentence Transformer model.
 4. Cache embedding for reuse
 5. Store embedding in MongoDB
 ### Pipeline
-Generate embedding for the input case.
+Generate an embedding for the input case.
 1. Normalize input
 2. Check cache
 3. Check MongoDB
@@ -43,3 +43,47 @@ Generate embedding for the input case.
 Each case document stores:
 - embedding vector
 - embedding version
+
+# Day-3
+## Similar case retrieval
+To retrieve the most relevant past cases for a given input. 
+The system returns the top 5 similar cases along with their similarity scores in a consistent format.
+
+### Pipeline
+Input (Symptoms + Doctor Notes)
+↓
+Text Preprocessing
+↓
+Embedding Generation
+↓
+FAISS Vector Search (Top 5)
+↓
+Similarity Score Calculation
+↓
+Filtering (Threshold ≥ 0.5)
+↓
+Sorting (Descending Similarity)
+↓
+Insight Generation
+↓
+Structured Output
+
+### Process
+1. The input (symptoms + doctor notes) is first cleaned and normalized
+2. An embedding is generated for the input text
+3. FAISS is used to find the top 5 similar cases
+3. A similarity score is computed from the distance
+4. Low-confidence results are filtered using a threshold (≥ 0.5)
+5. Duplicate case IDs are removed.
+6. The final results are sorted and structured.
+
+### Output structure
+{
+  "similar_cases": [
+    {"case_id": "...", "similarity_score":...},
+    {"case_id": "...", "similarity_score": ...}
+  ],
+  "symptoms": "...",
+  "treatment": "...",
+  "similarity_score": "..."
+}

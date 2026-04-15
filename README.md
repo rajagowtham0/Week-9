@@ -79,3 +79,24 @@ The system returns the top 5 similar cases along with their similarity scores in
   "treatment": "In similar past cases, patients well responded ...",
   "similarity_score": "Based on the 5 similar patients, the weighted confidence score obtained is ..."
 }
+
+# Day-4
+## Retrieval Pipeline
+To build and verify a complete pipeline that processes a case description and retrieves the most similar past cases.
+The system ensures consistent retrieval using embeddings and FAISS-based similarity search.
+
+### Pipeline
+1. case description
+2. embedding
+3. retrieval
+4. similar cases
+5. insight generation
+
+### Process
+1. The case description is formed by combining symptoms and doctor notes
+2. The input text is converted into an embedding using a pre-trained model
+3. FAISS is used to retrieve the top 5 similar cases
+4. Similarity scores are calculated for each retrieved case
+5. Low-confidence results are filtered, and duplicates are removed
+6. The final results are structured and returned as output
+

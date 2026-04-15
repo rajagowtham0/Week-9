@@ -1,0 +1,77 @@
+# sample case 1- ACNE
+{
+  "symptoms": "inflamed pimples with redness on cheeks",
+  "doctor_notes": "moderate acne condition"
+}
+# sample response 1
+{
+  "similar_cases": [
+    {
+      "case_id": "CASE_015",
+      "similarity_score": 0.8205
+    },
+    {
+      "case_id": "CASE_016",
+      "similarity_score": 0.6215
+    },
+    {
+      "case_id": "CASE_001",
+      "similarity_score": 0.6102
+    },
+    {
+      "case_id": "CASE_003",
+      "similarity_score": 0.5727
+    }
+  ],
+  "symptoms": "The similarity is mainly due to shared symptoms such as pimples, inflamed",
+  "treatment": "In similar past cases, patients well responded Benzoyl peroxide gel",
+  "similarity_score": "Based on the 4 similar patients, the weighted confidence score obtained is 0.656"
+}
+
+# sample case 2- PIGMENTATION
+{
+  "symptoms": "dark patches with uneven skin tone on face",
+  "doctor_notes": "hyperpigmentation due to sun exposure"
+}
+# sample response 2
+{
+  "similar_cases": [
+    {
+      "case_id": "CASE_003",
+      "similarity_score": 0.6232
+    },
+    {
+      "case_id": "CASE_024",
+      "similarity_score": 0.5523
+    },
+    {
+      "case_id": "CASE_004",
+      "similarity_score": 0.5297
+    }
+  ],
+  "symptoms": "The similarity is mainly due to shared symptoms such as dark, patches",
+  "treatment": "In similar past cases, patients well responded Chemical peel + sunscreen",
+  "similarity_score": "Based on the 3 similar patients, the weighted confidence score obtained is 0.568"
+}
+
+# Sample case 3- HAIR LOSS
+{
+  "symptoms": "increased hair fall and thinning of hair",
+  "doctor_notes": "possible androgenic alopecia"
+}
+# Sample response 3
+{
+  "similar_cases": [
+    {
+      "case_id": "CASE_006",
+      "similarity_score": 0.6448
+    },
+    {
+      "case_id": "CASE_022",
+      "similarity_score": 0.5815
+    }
+  ],
+  "symptoms": "The similarity is mainly due to shared symptoms such as fall, hair, thinning",
+  "treatment": "In similar past cases, patients well responded PRP therapy",
+  "similarity_score": "Based on the 2 similar patients, the weighted confidence score obtained is 0.613"
+}

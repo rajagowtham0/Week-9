@@ -1,5 +1,44 @@
 # Week-9
 
+# CCMS_AI Application
+## Project overview
+The CCMS AI system is designed to retrieve similar patient cases based on input symptoms and doctor notes. 
+It uses embedding-based similarity and FAISS search to identify relevant past cases and generate structured insights.
+## Project structure
+ccms_ai/
+│
+├── data_processing/
+│   └── database.py            # Handles MongoDB connection and data retrieval
+│
+├── models/
+│   └── models.py              # Defines API request, response schemas, and top similar cases retrieval
+│
+├── retrieval/
+│   ├── retrieval_engine.py    # Core pipeline: retrieval + insight generation
+│   └── vector_index.py        # FAISS index creation and similarity search
+│
+├── utils/
+│   ├── embedding.py           # Embedding generation, caching, and storage
+│   └── config.py              # Configuration settings (DB, model, parameters)
+│
+├── app.py                     # FastAPI application
+
+## Module overview
+### data_processing/database.py
+Manages database operations, including fetching stored cases and embeddings.
+### models/models.py
+Defines structured request and response formats for the API.
+### retrieval/retrieval_engine.py
+Implements the main pipeline for retrieving similar cases and generating insights.
+### retrieval/vector_index.py
+Handles FAISS-based indexing and similarity search.
+### utils/embedding.py
+Generates embeddings and manages caching and storage.
+### utils/config.py
+Stores configuration variables such as database connection and model details.
+### app.py
+Serves as the main API layer connecting all components.
+
 
 # Day-1
 ## Retrieval Engine
@@ -100,3 +139,7 @@ The system ensures consistent retrieval using embeddings and FAISS-based similar
 5. Low-confidence results are filtered, and duplicates are removed
 6. The final results are structured and returned as output
 
+# Day-5
+1. Tested the developed ccms_ai system with nearly 20 sample request schemas.
+2. Used sample cases are stored in the testing_samplecase_dataset.txt
+3. All the requests and response schemas are cleanly documented in the Week-9 report

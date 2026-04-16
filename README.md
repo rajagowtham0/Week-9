@@ -6,22 +6,17 @@ The CCMS AI system is designed to retrieve similar patient cases based on input 
 It uses embedding-based similarity and FAISS search to identify relevant past cases and generate structured insights.
 ## Project structure
 ccms_ai/
-│
-├── data_processing/
-│   └── database.py            # Handles MongoDB connection and data retrieval
-│
-├── models/
-│   └── models.py              # Defines API request, response schemas, and top similar cases retrieval
-│
-├── retrieval/
-│   ├── retrieval_engine.py    # Core pipeline: retrieval + insight generation
-│   └── vector_index.py        # FAISS index creation and similarity search
-│
-├── utils/
-│   ├── embedding.py           # Embedding generation, caching, and storage
-│   └── config.py              # Configuration settings (DB, model, parameters)
-│
-├── app.py                     # FastAPI application
+1. data_processing/
+database.py            # Handles MongoDB connection and data retrieval
+2. models/
+models.py              # Defines API request, response schemas, and top similar cases retrieval
+3. retrieval/
+retrieval_engine.py    # Core pipeline: retrieval + insight generation
+vector_index.py        # FAISS index creation and similarity search
+4. utils/
+embedding.py           # Embedding generation, caching, and storage
+config.py              # Configuration settings (DB, model, parameters)
+5. app.py              # FastAPI application
 
 ## Module overview
 ### data_processing/database.py

@@ -7,15 +7,15 @@ It uses embedding-based similarity and FAISS search to identify relevant past ca
 ## Project structure
 ccms_ai/
 1. data_processing/
-database.py            # Handles MongoDB connection and data retrieval
+1. database.py            # Handles MongoDB connection and data retrieval
 2. models/
-models.py              # Defines API request, response schemas, and top similar cases retrieval
+1. models.py              # Defines API request, response schemas, and top similar cases retrieval
 3. retrieval/
-retrieval_engine.py    # Core pipeline: retrieval + insight generation
-vector_index.py        # FAISS index creation and similarity search
+1. retrieval_engine.py    # Core pipeline: retrieval + insight generation
+2. vector_index.py        # FAISS index creation and similarity search
 4. utils/
-embedding.py           # Embedding generation, caching, and storage
-config.py              # Configuration settings (DB, model, parameters)
+1. embedding.py           # Embedding generation, caching, and storage
+2. config.py              # Configuration settings (DB, model, parameters)
 5. app.py              # FastAPI application
 
 ## Module overview
